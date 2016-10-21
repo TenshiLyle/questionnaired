@@ -1,4 +1,3 @@
 /node_modules
-/dist
-/**/*.js
-/typings
+/spec/**/*.js
+/src/**/*.js
