@@ -1,0 +1,27 @@
+{
+  "name": "questionnaire-md",
+  "version": "1.0.0",
+  "description": "Questionnaire file parser and renderer",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd spec && tsc && cd .. && jasmine"
+  },
+  "author": "Jerome Suarez <jerome.suarez@codingavenue.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine": "^2.5.2",
+    "@types/jasmine": "^2.5.35",
+    "typescript": "^2.0.3"
+  },
+  "dependencies": {
+    "@types/cheerio": "^0.17.31",
+    "@types/fs-extra": "0.0.33",
+    "@types/js-yaml": "^3.5.28",
+    "@types/marked": "0.0.28",
+    "cheerio": "^0.22.0",
+    "fs-extra": "^0.30.0",
+    "js-yaml": "^3.6.1",
+    "markdown-it": "^8.0.1",
+    "marked": "^0.3.6"
+  }
+}
