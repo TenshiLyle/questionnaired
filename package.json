@@ -1,8 +1,8 @@
 {
-  "name": "questionnaire-md",
+  "name": "questionnaired",
   "version": "1.0.0",
-  "description": "Questionnaire file parser and renderer",
-  "main": "dist/Questionnaire.js",
+  "description": "Renders a questionnaire file into html",
+  "main": "dist/questionnaired.js",
   "scripts": {
     "test": "cd spec && tsc && cd .. && jasmine"
   },
