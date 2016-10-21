@@ -1,4 +1,5 @@
 "use strict";
+const QuestionnaireType_1 = require('./QuestionnaireType');
 const QuestionnaireParser_1 = require('./Parser/QuestionnaireParser');
 const QuestionnaireRenderer_1 = require('./Renderer/QuestionnaireRenderer');
 function questionnaired(path) {
@@ -8,5 +9,14 @@ function questionnaired(path) {
     const renderer = new QuestionnaireRenderer_1.default(blocks, path, "ca-school-php-introduction");
     return renderer.render();
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = questionnaired;
+exports.questionnaired = questionnaired;
+exports.namespace = {
+    questionnaired,
+    QuestionnaireType: QuestionnaireType_1.QuestionnaireType,
+    Parser: {
+        QuestionnaireParser: QuestionnaireParser_1.default
+    },
+    Renderer: {
+        QuestionnaireRenderer: QuestionnaireRenderer_1.default
+    }
+};
