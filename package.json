@@ -4,18 +4,14 @@
   "description": "Questionnaire file parser and renderer",
   "main": "dist/Questionnaire.js",
   "scripts": {
-    "test": "cd spec && tsc && cd .. && jasmine",
-    "preinstall": "npm install autodts",
-    "postinstall": "autodts link",
-    "prepublish": "tsc && autodts generate"
+    "test": "cd spec && tsc && cd .. && jasmine"
   },
   "author": "Jerome Suarez <jerome.suarez@codingavenue.com>",
   "license": "ISC",
   "devDependencies": {
     "jasmine": "^2.5.2",
     "@types/jasmine": "^2.5.35",
-    "typescript": "^2.0.3",
-    "@lib/autodts-generator": "~0.0.1"
+    "typescript": "^2.0.3"
   },
   "dependencies": {
     "@types/cheerio": "^0.17.31",
@@ -26,10 +22,6 @@
     "fs-extra": "^0.30.0",
     "js-yaml": "^3.6.1",
     "markdown-it": "^8.0.1",
-    "marked": "^0.3.6",
-    "autodts": "~0.0.6"
-  },
-  "typescript": {
-    "definition": "index.d.ts"
+    "marked": "^0.3.6"
   }
 }
