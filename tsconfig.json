@@ -11,6 +11,6 @@
         "spec"
     ],
     "files": [
-        "src/Questionnaire.ts"
+        "src/questionnaired.ts"
     ]
 }
