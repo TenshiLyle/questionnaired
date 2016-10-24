@@ -1,8 +1,8 @@
 "use strict";
-const util = require('util');
 const cheerio = require('cheerio');
 const marked = require('marked');
 const QuestionnaireType_1 = require('../QuestionnaireType');
+const escapeHTML = require('escape-html');
 class QuestionnaireBlockRenderer {
     constructor(questionnaireBlock, sourcePath, repoName) {
         this.questionnaireBlock = questionnaireBlock;
@@ -37,7 +37,7 @@ class QuestionnaireBlockRenderer {
         this.cheerio(".questionnaire-container").append(this.appendQuestionnaireElement(element));
     }
     appendQuestionnaireElement(element) {
-        return util.format("<div class='questionnaire-element'>%s</div>", element);
+        return `<div class="questionnaire-element">${element}</div>`;
     }
     renderQuestionText() {
         this.appendElement(marked(this.questionnaireBlock.text));
@@ -55,10 +55,9 @@ class QuestionnaireBlockRenderer {
         return "<div class='questionnaire-choices'>" + html + "</div>";
     }
     renderChoice(ident, label) {
-        return util.format("<div class='checkbox'><label><input type='checkbox' value='%s'>%s</label></div>", ident, marked(label));
+        return `<div class="checkbox"><label><input type="checkbox" value="${ident}">${marked(label)}</label></div>`;
     }
     renderTI() {
-        let html = '';
         return `<input type="text" class="col-md-2 col-sm-3" /><br /><br />`;
     }
     renderSubmit() {
@@ -67,7 +66,8 @@ class QuestionnaireBlockRenderer {
                     data-questionnaire-repo='${this.repoName}'>Submit</button>`;
     }
     renderCR() {
-        return util.format("<p><div class='questionnaire-code-response' data-questionnaire-language='%s' data-quesionnaire-code='%s'></div></p>", this.questionnaireBlock.language, JSON.stringify(this.questionnaireBlock.code));
+        const code = escapeHTML(this.questionnaireBlock.code.join("\n\n"));
+        return `<p><div class="questionnaire-code-response ace-editor" data-lang="${this.questionnaireBlock.language}" id="${this.sourcePath}-${this.questionnaireBlock.questionNumber}">${code}</div></p>`;
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });

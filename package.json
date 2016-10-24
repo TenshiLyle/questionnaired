@@ -19,6 +19,7 @@
     "@types/js-yaml": "^3.5.28",
     "@types/marked": "0.0.28",
     "cheerio": "^0.22.0",
+    "escape-html": "^1.0.3",
     "fs-extra": "^0.30.0",
     "js-yaml": "^3.6.1",
     "markdown-it": "^8.0.1",
