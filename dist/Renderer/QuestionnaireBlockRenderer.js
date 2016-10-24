@@ -67,7 +67,7 @@ class QuestionnaireBlockRenderer {
     }
     renderCR() {
         const code = escapeHTML(this.questionnaireBlock.code.join("\n\n"));
-        return `<p><div class="questionnaire-code-response ace-editor" data-lang="${this.questionnaireBlock.language}" id="${this.sourcePath}-${this.questionnaireBlock.questionNumber}">${code}</div></p>`;
+        return `<p><pre class="questionnaire-code-response ace-editor" data-lang="${this.questionnaireBlock.language}" id="${this.sourcePath}-${this.questionnaireBlock.questionNumber}">${code}</pre></p>`;
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });
