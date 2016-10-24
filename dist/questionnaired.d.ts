@@ -1,7 +1,7 @@
 import QuestionnaireParser from './Parser/QuestionnaireParser';
 import QuestionnaireRenderer from './Renderer/QuestionnaireRenderer';
 export declare function render(path: string, rootFolderName: string): string;
-export declare const namespace: {
+export declare const questionnaired: {
     render: (path: string, rootFolderName: string) => string;
     QuestionnaireType: {
         "CR": string;

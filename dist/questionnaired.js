@@ -9,7 +9,7 @@ function render(path, rootFolderName) {
     return renderer.render();
 }
 exports.render = render;
-exports.namespace = {
+exports.questionnaired = {
     render,
     QuestionnaireType: QuestionnaireType_1.QuestionnaireType,
     Parser: {

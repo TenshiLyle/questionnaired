@@ -10,7 +10,7 @@ export function render(path: string, rootFolderName: string): string {
     return renderer.render()
 }
 
-export const namespace = {
+export const questionnaired = {
     render,
     QuestionnaireType,
     Parser: {
