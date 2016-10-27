@@ -1,20 +1,24 @@
-import { QuestionnaireType } from '../QuestionnaireType'
+import { QuestionType } from './QuestionType'
 
 export interface ChoiceMap {
     [key: string]: string;
 }
 
-export default class QuestionnaireBlock {
-    questionNumber  : string;
-    text            : string;
-    type            : string;
-    answer          : any;
-    choices?        : ChoiceMap;
-    language?       : string;
-    code?           : Array<string>;
+export default class Question {
+    questionNumber  : number
+    text            : any
+    type            : string
+    answer          : any
+    choices?        : ChoiceMap
+    language?       : string
+    code?           : string
 
-    isValid() {
-        if( this.type === QuestionnaireType.MC || this.type === QuestionnaireType.MS ) {
+    constructor() {
+        this.text = []
+    }
+
+    isValid(): boolean {
+        if( this.isMC() || this.isMS() ) {
             if( this.hasText()
                 && this.hasType()
                 && this.hasAnswer()
@@ -23,7 +27,7 @@ export default class QuestionnaireBlock {
                     return true;
             }
         }
-        else if ( this.type === QuestionnaireType.CR ) {
+        else if ( this.isCR() ) {
             if ( this.hasText()
                 && this.hasType()
                 && this.hasLanguage()
@@ -43,15 +47,15 @@ export default class QuestionnaireBlock {
         return false;
     }
 
-    hasText() {
-        if ( this.text === undefined ) {
-            return false;
+    hasText(): boolean {
+        if ( this.text.length > 0 ) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
-    hasQuestionNumber() {
+    hasQuestionNumber(): boolean {
         if ( this.questionNumber === undefined ) {
             return false;
         }
@@ -59,7 +63,7 @@ export default class QuestionnaireBlock {
         return true;
     }
 
-    hasType() {
+    hasType(): boolean {
         if ( this.type === undefined ) {
             return false;
         }
@@ -67,7 +71,7 @@ export default class QuestionnaireBlock {
         return true;
     }
 
-    hasAnswer() {
+    hasAnswer(): boolean {
         if ( this.answer === undefined ) {
             return false;
         }
@@ -75,7 +79,7 @@ export default class QuestionnaireBlock {
         return true;
     }
 
-    hasChoices() {
+    hasChoices(): boolean {
         if ( this.choices === undefined ) {
             return false;
         }
@@ -83,7 +87,7 @@ export default class QuestionnaireBlock {
         return true;
     }
 
-    hasLanguage() {
+    hasLanguage(): boolean {
         if ( this.language === undefined ) {
             return false;
         }
@@ -91,11 +95,31 @@ export default class QuestionnaireBlock {
         return true;
     }
 
-    hasCode() {
+    hasCode(): boolean {
         if ( this.code === undefined ) {
             return false;
         }
 
         return true;
+    }
+
+    isCR(): boolean {
+        if ( this.type === QuestionType.CR ) return true
+        return false
+    }
+
+    isMC(): boolean {
+        if ( this.type === QuestionType.MC ) return true
+        return false
+    }
+
+    isMS(): boolean {
+        if ( this.type === QuestionType.MS ) return true
+        return false
+    }
+
+    isTI(): boolean {
+        if ( this.type === QuestionType.TI ) return true
+        return false
     }
 }

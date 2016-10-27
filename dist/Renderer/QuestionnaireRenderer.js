@@ -1,5 +1,5 @@
 "use strict";
-const QuestionnaireBlockRenderer_1 = require('./QuestionnaireBlockRenderer');
+const QuestionRenderer_1 = require('./QuestionRenderer');
 class QuestionnaireRenderer {
     constructor(parsedQuestions, sourcePath, repoName) {
         this.parsedQuestions = parsedQuestions;
@@ -7,12 +7,12 @@ class QuestionnaireRenderer {
         this.questionnaireRepoName = repoName;
     }
     render() {
-        let renderedBlockQuestion = new Array();
-        this.parsedQuestions.forEach(function (questionnaireBlock, idx) {
-            let questionnaireBlockRenderer = new QuestionnaireBlockRenderer_1.default(questionnaireBlock, this.questionnaireSourcePath, this.questionnaireRepoName);
-            renderedBlockQuestion.push(questionnaireBlockRenderer.render());
+        const renderedQuestion = [];
+        this.parsedQuestions.forEach((question, idx) => {
+            const questionRenderer = new QuestionRenderer_1.default(question, this.questionnaireSourcePath, this.questionnaireRepoName);
+            renderedQuestion.push(questionRenderer.render());
         }, this);
-        return renderedBlockQuestion.join(" ");
+        return renderedQuestion.join(" ");
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });

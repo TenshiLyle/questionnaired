@@ -1,218 +1,136 @@
 import * as fs from 'fs-extra'
 import * as yaml from 'js-yaml'
 import * as path from 'path'
+import * as marked from 'marked'
+import * as util from 'util'
 
-import QuestionnaireBlock from './QuestionnaireBlock'
-import QuestionnaireLine from './QuestionnaireLine'
-import Utils from './Utils'
-import { QuestionnaireType } from '../QuestionnaireType'
+import Question from './Question'
+import QuestionToken from './QuestionToken'
+import Answer from './Answer'
+import { QuestionType } from './QuestionType'
 
 const markdown = require('markdown-it');
 
-export default class QuestionnaireParser {
+export interface QuestionTokenList {
+    [ index: number ]: QuestionToken
+}
 
-    private questionFilePath: string;
-    private answerFilePath: string;
+export default class QuestionnaireParser {
+    private questionFilePath: string
+    private answerFilePath: string
 
     constructor( questionFilePath: string ) {
-        this.questionFilePath = questionFilePath;
-        this.answerFilePath = this.getAnswerFilePath();
+        this.questionFilePath = questionFilePath
+        this.answerFilePath = this.getAnswerFilePath()
 
-        let questionStat = fs.statSync( this.questionFilePath );
-        let answerStat = fs.statSync( this.answerFilePath );
+        let questionStat = fs.statSync( this.questionFilePath )
+        let answerStat = fs.statSync( this.answerFilePath )
 
         if ( !questionStat.isFile() ) {
-            throw new Error("Question File " + this.questionFilePath + " does not exists");
+            throw new Error(`Question File ${this.questionFilePath} does not exists`)
         }
 
         if( !answerStat.isFile() ) {
-            throw new Error("Answer File " + this.answerFilePath + " does not exists");
+            throw new Error(`Answer File ${this.answerFilePath} does not exists`)
         }
     }
 
-    parse(): Array<QuestionnaireBlock> {
-        let questionContent = this.readQuestionFile();
+    parse(): Array<Question> {
+        const tokens = marked.lexer( this.readQuestionFile() )
 
-        let md = new markdown('zero');
-
-        let tokens = md.parse( questionContent );
-
-        return this.parseTokens( tokens );
+        return this.parseTokens( tokens )
     }
 
-    private parseTokens( tokens: Array<{}> ): Array<QuestionnaireBlock> {
-        let questionBlocks = new Array();
-        let isInsideCodeBlock = false;
-        let depth: number = 0;
-        let questionBlock = new Array();
-        let answers = this.readAnswerFile();
+    private parseTokens( tokens: Array<any> ): Array<Question> {
+        const questions: Array<Question> = []
 
-        // I have to put all code blocks into an array. So we won't have to scan the code block for the ace editor part.
-        // We know that the last code block for a CR type is the one that will be rendered by the ace editor.
-        let codeBlock = new Array();
-
-        while( tokens.length > 0 ) {
-            let tok: any = tokens.shift();
-
-            if ( tok.type === 'inline' ) {
-                let questionLine = new QuestionnaireLine( tok.content );
-                
-                if ( questionLine.isStartQuestion() && !isInsideCodeBlock && questionBlock.length > 0 ) {
-                    questionBlocks.push( this.parseQuestionBlock( questionBlock, answers ) );
-                    questionBlock = new Array();
-                }
-
-                if ( questionLine.isCodeBlock() ) {
-                    if ( isInsideCodeBlock ) {
-                        // If we're inside a code block and found another code marker with a language on it, MD will include it as part of the code block.
-                        if ( questionLine.hasLanguage() ) {
-                            codeBlock.push( questionLine );
-                        }
-                        else { // If no language was included, then MD assume it's the end of the code block.
-                            isInsideCodeBlock = false;
-                            depth--;
-
-                            if ( depth < 0 ) {
-                                throw new Error("Unable to parse Questionnaire File. Unmatch Code Block markers found at " + tok.content);
-                            }
-
-                            codeBlock.push( questionLine );
-                            questionBlock.push( codeBlock );
-                            depth = 0;
-                            codeBlock = [];
-                        }
-                    }
-                    else {
-                        codeBlock.push( questionLine );
-                        
-                        // For code block which only has a single line of code and without any line space between the code marker.
-                        if ( questionLine.isSingleLineCode() ) {
-                            questionBlock.push( codeBlock );
-                            codeBlock = [];
-                        }
-                        else {
-                            isInsideCodeBlock = true;
-                            depth++;
-                        }
-                    }
-                }
-                else {
-                    if ( isInsideCodeBlock ) {
-                        codeBlock.push( questionLine );
-                    }
-                    else {
-                        questionBlock.push( questionLine );
-                    }
-                }
-            }
-        }
-
-        if ( isInsideCodeBlock ) {
-            throw new Error("Unable to parse Questionnaire File. Unmatch Code Block markers found.");
-        }
-
-        if ( questionBlock.length > 0 ) {
-            questionBlocks.push( this.parseQuestionBlock( questionBlock, answers ) );
-        }
-
-        return questionBlocks;
+        const groupTokens = this.groupTokens( tokens )
+       
+        return this.parseGroupTokens( groupTokens )
     }
 
-    private parseQuestionBlock( questionBlock: Array<any>, answers: any ): QuestionnaireBlock {
-        let questionnaireBlock = new QuestionnaireBlock();
-        
-        questionnaireBlock.questionNumber = questionBlock[0].getQuestionNumber();
-        questionnaireBlock.type = this.getQuestionType( questionBlock, answers, questionnaireBlock.questionNumber );
-        questionnaireBlock.answer = answers[questionnaireBlock.questionNumber];
+    private parseGroupTokens( groupTokens: Array<QuestionTokenList> ): Array<Question> {
+        const answers = this.readAnswerFile()
+        const questions: Array<Question> = []
 
-        let questionText: Array<string> = [];
+        groupTokens.forEach( ( tokens: Array<QuestionToken>, index: number ) => {
+            const question = new Question()
+            const answer = new Answer( answers[ index + 1 ] )
 
-        if ( questionnaireBlock.type === QuestionnaireType.CR ) {
-            //For CR type the last element of a questionBlock is an array which is the code block that will be rendered by the Ace Editor.
-            let codeBlock = questionBlock.pop();
-            questionnaireBlock.language = codeBlock[0].getLanguage();
-            questionnaireBlock.code = [];
+            if ( answer.isCR() ) {
+                const token = tokens.pop() // Last token of a group is a code block that will be rendered by the Ace Editor
 
-            codeBlock.forEach( (x: QuestionnaireLine) => questionnaireBlock.code.push( x.getCode() ) );
-
-            // We then put the rest of the block as part of the question text.
-            questionBlock.forEach( (elem: any) => {
-                if ( elem instanceof QuestionnaireLine ) {
-                    questionText.push( elem.questionLine );
-                }
-                else { // For Code Block that is part of the question text.
-                    elem.forEach( (x: QuestionnaireLine ) => questionText.push( x.questionLine ));
-                }
-            });
-        }
-        else {
-            // For TI, MS and MC type of question.
-            questionBlock.forEach( questionnaireLine => {
-                if ( questionnaireLine instanceof Array ) { // CodeBlock element that is part of the question text.. 
-                    questionnaireLine.forEach( codeLine => {
-                        questionText.push( codeLine.questionLine );
-                    })
-                }
-                else if ( questionnaireLine.isOption() ) { // Options element e.g "a. First Choice"
-                    let [optionKey, optionValue] = questionnaireLine.getOption();
-                        
-                    if ( !questionnaireBlock.hasChoices() ) {
-                        questionnaireBlock.choices = {};
-                    }
-
-                    questionnaireBlock.choices[optionKey] = optionValue;
-                }
-                else {
-                    questionText.push( questionnaireLine.questionLine );
-                }
-            })
-        }
-
-        questionnaireBlock.text = questionText.join("\n\n");
-
-        if ( !questionnaireBlock.isValid() ) {
-            throw new Error("Invalid Question found: " + JSON.stringify(questionnaireBlock));
-        }
-
-        return questionnaireBlock;
-    }
-
-    private getQuestionType( questionBlock: Array<any>, answers: any, questionNumber: string ) {
-        let answer: any = answers[questionNumber];
-
-        if ( answer ) {
-            if( answer instanceof Array ) {
-                return QuestionnaireType.MS;
-            }
-            else if ( Utils.isAnswerProofMarker( answer.toString() ) ) {
-                return QuestionnaireType.CR;
-            }
-            else if ( questionBlock[questionBlock.length - 1 ].isOption() ) {
-                return QuestionnaireType.MC;
+                question.type = QuestionType.CR
+                question.language = token.getLang()
+                question.code = token.getText()
+                question.text = tokens.map( ( tok: QuestionToken ) => tok.getToken() )
             }
             else {
-                return QuestionnaireType.TI;
+                while( tokens.length > 0 ) {
+                    const tok = tokens.shift()
+
+                    if ( tok.isOption() ) {
+                        if ( !question.hasChoices() ) question.choices = {}
+                        if ( !question.hasType() ) question.type = answer.isMS() ? QuestionType.MS : QuestionType.MC
+                        const [key, value] = tok.getOption()
+                        question.choices[key] = value
+
+                        // Peak the next token if it's a space, we'll need to remove it since it's not needed
+                        if ( tokens.length > 0 && tokens[tokens.length - 1].isSpaceToken() ) tokens.shift()
+                    }
+                    else {
+                        question.text.push( tok.getToken() )
+                    }
+                }
             }
-        }
-        else {
-            throw new Error("No answer found for question " + questionNumber);
-        }
+
+            if ( !question.hasType() ) question.type = QuestionType.TI // Default type is TI
+            question.questionNumber = index + 1
+            question.answer = answer.getAnswer()
+
+            if ( question.isValid() ) {
+                question.text.links = {} // This is required for the marked.parser() to work
+                questions.push(question)
+            }
+            else {
+                throw new Error(`Invalid Question: ${util.inspect(question)}`)
+            }
+        })
+
+        return questions
+    }
+
+    private groupTokens( tokens: Array<any> ): Array<QuestionTokenList> {
+        const groupTokens: Array<QuestionTokenList> = []
+        let group: Array<QuestionToken> = []
+
+        tokens.forEach( tok => {
+            const token = new QuestionToken( tok )
+            if ( token.isStartQuestion() && group.length > 0 ) {
+                groupTokens.push( group )
+                group = []
+            }
+            
+            group.push( token )
+        })
+
+        groupTokens.push( group )
+
+        return groupTokens
     }
 
     private readQuestionFile(): string {
-        return fs.readFileSync( this.questionFilePath, 'utf8' );
+        return fs.readFileSync( this.questionFilePath, 'utf8' )
     }
 
     private readAnswerFile(): string {
-        return yaml.safeLoad(fs.readFileSync( this.answerFilePath, 'utf8' ) );
+        return yaml.safeLoad(fs.readFileSync( this.answerFilePath, 'utf8' ) )
     }
 
     private getAnswerFilePath(): string {
-        let questionFile: string = path.basename(this.questionFilePath);
-        let answerFile: string = `${path.basename(this.questionFilePath, '.q.md')}.yml`;
+        const questionFile: string = path.basename(this.questionFilePath)
+        const answerFile: string = `${path.basename(this.questionFilePath, '.q.md')}.yml`
 
-        answerFile = this.questionFilePath.replace(questionFile, answerFile);
-
-        return answerFile;
+        return this.questionFilePath.replace(questionFile, answerFile)
     }
 }

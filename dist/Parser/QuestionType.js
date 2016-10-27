@@ -1,5 +1,5 @@
 "use strict";
-exports.QuestionnaireType = {
+exports.QuestionType = {
     "CR": "CR",
     "MC": "MC",
     "MS": "MS",

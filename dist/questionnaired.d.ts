@@ -3,7 +3,7 @@ import QuestionnaireRenderer from './Renderer/QuestionnaireRenderer';
 export declare function render(path: string, rootFolderName: string): string;
 export declare const questionnaired: {
     render: (path: string, rootFolderName: string) => string;
-    QuestionnaireType: {
+    QuestionType: {
         "CR": string;
         "MC": string;
         "MS": string;

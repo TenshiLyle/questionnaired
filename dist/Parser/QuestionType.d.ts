@@ -1,4 +1,4 @@
-export declare const QuestionnaireType: {
+export declare const QuestionType: {
     "CR": string;
     "MC": string;
     "MS": string;

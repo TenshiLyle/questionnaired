@@ -22,7 +22,6 @@
     "escape-html": "^1.0.3",
     "fs-extra": "^0.30.0",
     "js-yaml": "^3.6.1",
-    "markdown-it": "^8.0.1",
     "marked": "^0.3.6"
   }
 }

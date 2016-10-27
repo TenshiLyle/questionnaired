@@ -1,22 +1,4 @@
 export default class Utils {
-    static isAdditionalQuestionMarker( code: number ): boolean {
-        switch( code ) {
-            case 0x3E: // >
-                return true;
-        }
-
-        return false;
-    }
-
-    static isCodeMarker( code: number): boolean {
-        switch( code) {
-            case 0x60: // `
-                return true;
-        }
-
-        return false;
-    }
-
     static isOptionMarker( code: number ): boolean {
         switch( code ) {
             case 0x41: // A
@@ -96,44 +78,18 @@ export default class Utils {
         return false;
     }
 
-    static isDigit( code: number ): boolean {
-        switch( code ) {
-            case 0x30:
-            case 0x31:
-            case 0x32:
-            case 0x33:
-            case 0x34:
-            case 0x35:
-            case 0x36:
-            case 0x37:
-            case 0x38:
-            case 0x39:
-                return true;
-        }
-
-        return false;
-    }
-
-    static isLineFeed( code: number ): boolean {
-        switch( code ) {
-            case 0xA:
-                return true;
-        }
-
-        return false;
-    }
-
     static isAnswerProofMarker( line: string ): boolean {
         if ( line.length < 6 ) {
             return false;
         }
 
-        if ( line.charCodeAt(0) == 0x40
-            && line.charCodeAt(1) == 0x70
-            && line.charCodeAt(2) == 0x72
-            && line.charCodeAt(3) == 0x6F
-            && line.charCodeAt(4) == 0x6F
-            && line.charCodeAt(5) == 0x66 ) {
+        if ( line.charCodeAt(0) == 0x40         // @
+            && line.charCodeAt(1) == 0x70       // p
+            && line.charCodeAt(2) == 0x72       // r
+            && line.charCodeAt(3) == 0x6F       // o
+            && line.charCodeAt(4) == 0x6F       // o
+            && line.charCodeAt(5) == 0x66       // f
+            && line.charCodeAt(6) === 0x3A ) {  // :
                 return true;
         }
 
