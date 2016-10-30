@@ -24,7 +24,7 @@ export default class Question {
                 && this.hasAnswer()
                 && this.hasChoices()
                 && this.hasQuestionNumber() ) {
-                    return true;
+                    return true
             }
         }
         else if ( this.isCR() ) {
@@ -33,74 +33,64 @@ export default class Question {
                 && this.hasLanguage()
                 && this.hasCode() 
                 && this.hasQuestionNumber() ) {
-                    return true;
+                    return true
             }
         }
         else {
             if ( this.hasText() 
                 && this.hasType() 
                 && this.hasQuestionNumber() ) {
-                    return true;
+                    return true
             }
         }
 
-        return false;
+        return false
     }
 
     hasText(): boolean {
-        if ( this.text.length > 0 ) {
-            return true;
-        }
+        let hasText = false
+        
+        this.text.forEach( (tok: any) => {
+            if ( tok.hasOwnProperty('text' && tok.text.length > 0 )) hasText = true
+        })
 
-        return false;
+        return hasText
     }
 
     hasQuestionNumber(): boolean {
-        if ( this.questionNumber === undefined ) {
-            return false;
-        }
+        if ( this.questionNumber === undefined ) return false
 
-        return true;
+        return true
     }
 
     hasType(): boolean {
-        if ( this.type === undefined ) {
-            return false;
-        }
+        if ( this.type === undefined ) return false
 
-        return true;
+        return true
     }
 
     hasAnswer(): boolean {
-        if ( this.answer === undefined ) {
-            return false;
-        }
+        if ( this.answer === undefined ) return false
 
-        return true;
+        return true
     }
 
     hasChoices(): boolean {
-        if ( this.choices === undefined ) {
-            return false;
-        }
+        if ( this.choices === undefined ) return false
 
-        return true;
+        return true
     }
 
     hasLanguage(): boolean {
-        if ( this.language === undefined ) {
-            return false;
-        }
+        if ( this.language === undefined ) return false
 
-        return true;
+        return true
     }
 
     hasCode(): boolean {
-        if ( this.code === undefined ) {
-            return false;
-        }
+        if ( this.code === undefined ) return false
 
-        return true;
+        return true
     }
 
     isCR(): boolean {

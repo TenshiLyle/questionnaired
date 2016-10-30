@@ -7,8 +7,6 @@ import * as cheerio from 'cheerio'
 import { QuestionType } from '../src/Parser/QuestionType'
 
 describe("A Question Renderer renders a single Question instance.", function() {
-    makeQuestion();
-    makeAnswer();
 
     const question = new Question()
     question.text = [
@@ -66,41 +64,3 @@ describe("A Question Renderer renders a single Question instance.", function() {
         });
     });
 })
-
-function makeQuestion() {
-    let questionText = `1. What is my name?
-
- a. Sandae
-
- b. Jerome
-
- c. Mark
-
- d. Nino
-
-2. This is a multiple-selection type of question
-
- a. W
-
- b. C
-
- c. D
-
-3. This question can submit code:
-
-\`\`\`php
-$variable = 1;
-\`\`\``;
-
-    fs.writeFileSync('/tmp/test-question.q.md', questionText);
-}
-
-function makeAnswer() {
-    let answerText = {
-        1: 'c',
-        2: ['a','b'],
-        3: "@proof/Chapter-01/IncreaseVariable.php"
-    };
-
-    fs.writeFileSync('/tmp/test-question.yml', yaml.safeDump(answerText));
-}

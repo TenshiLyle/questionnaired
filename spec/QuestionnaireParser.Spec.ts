@@ -33,28 +33,28 @@ describe("Question Parser parses a question file parser, it requires a .q.md fil
         expect( question.code === '$variable = 1;' ).toBe(true);
     });
 
-    //fs.unlinkSync('/tmp/test-question.q.md');
-    //fs.unlinkSync('/tmp/test-question.yml');
+    fs.unlinkSync('/tmp/test-question.q.md');
+    fs.unlinkSync('/tmp/test-question.yml');
 });
 
 function makeQuestion() {
     let questionText = `1. What is my name?
 
-a. Sandae
+ a. Sandae
 
-b. Jerome
+ b. Jerome
 
-c. Mark
+ c. Mark
 
-d. Nino
+ d. Nino
 
 2. This is a multiple-selection type of question
 
-a. W
+ a. W
 
-b. C
+ b. C
 
-c. D
+ c. D
 
 3. This question can submit code:
 

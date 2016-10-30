@@ -1,7 +1,7 @@
 import QuestionToken from '../src/Parser/QuestionToken'
 
 describe("A QuestionToken takes a token from the marked lexer", function() {
-    it("parse the token and able to this is a start of a question", function() {
+    it("parse the token and able to ask if this is a start of a question", function() {
         const token = new QuestionToken({ type: 'list_start', ordered: true })
         expect( token.isStartQuestion() ).toBe(true)
     })
