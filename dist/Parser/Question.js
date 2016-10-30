@@ -1,8 +1,11 @@
 "use strict";
-const QuestionnaireType_1 = require('../QuestionnaireType');
-class QuestionnaireBlock {
+const QuestionType_1 = require('./QuestionType');
+class Question {
+    constructor() {
+        this.text = [];
+    }
     isValid() {
-        if (this.type === QuestionnaireType_1.QuestionnaireType.MC || this.type === QuestionnaireType_1.QuestionnaireType.MS) {
+        if (this.isMC() || this.isMS()) {
             if (this.hasText()
                 && this.hasType()
                 && this.hasAnswer()
@@ -11,7 +14,7 @@ class QuestionnaireBlock {
                 return true;
             }
         }
-        else if (this.type === QuestionnaireType_1.QuestionnaireType.CR) {
+        else if (this.isCR()) {
             if (this.hasText()
                 && this.hasType()
                 && this.hasLanguage()
@@ -30,10 +33,10 @@ class QuestionnaireBlock {
         return false;
     }
     hasText() {
-        if (this.text === undefined) {
-            return false;
+        if (this.text.length > 0) {
+            return true;
         }
-        return true;
+        return false;
     }
     hasQuestionNumber() {
         if (this.questionNumber === undefined) {
@@ -71,6 +74,26 @@ class QuestionnaireBlock {
         }
         return true;
     }
+    isCR() {
+        if (this.type === QuestionType_1.QuestionType.CR)
+            return true;
+        return false;
+    }
+    isMC() {
+        if (this.type === QuestionType_1.QuestionType.MC)
+            return true;
+        return false;
+    }
+    isMS() {
+        if (this.type === QuestionType_1.QuestionType.MS)
+            return true;
+        return false;
+    }
+    isTI() {
+        if (this.type === QuestionType_1.QuestionType.TI)
+            return true;
+        return false;
+    }
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = QuestionnaireBlock;
+exports.default = Question;

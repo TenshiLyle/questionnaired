@@ -1,27 +1,26 @@
-import QuestionnaireBlockRenderer from './QuestionnaireBlockRenderer'
-import QuestionnaireBlock from '../Parser/QuestionnaireBlock'
-import QuestionnaireParser from '../Parser/QuestionnaireParser'
+import QuestionRenderer from './QuestionRenderer'
+import Question from '../Parser/Question'
 
 export default class QuestionnaireRenderer {
-    private parsedQuestions: Array<QuestionnaireBlock>;
-    private questionnaireSourcePath: string;
-    private questionnaireRepoName: string;
+    private parsedQuestions: Array<Question>
+    private questionnaireSourcePath: string
+    private questionnaireRepoName: string
 
-    constructor( parsedQuestions: Array<QuestionnaireBlock>, sourcePath: string, repoName: string ) {
-        this.parsedQuestions            = parsedQuestions;
-        this.questionnaireSourcePath    = sourcePath;
-        this.questionnaireRepoName      = repoName;
+    constructor( parsedQuestions: Array<Question>, sourcePath: string, repoName: string ) {
+        this.parsedQuestions            = parsedQuestions
+        this.questionnaireSourcePath    = sourcePath
+        this.questionnaireRepoName      = repoName
     }
 
     render(): string {
-        let renderedBlockQuestion: Array<string> = new Array();
+        const renderedQuestion: Array<string> = []
         
-        this.parsedQuestions.forEach( function( questionnaireBlock: QuestionnaireBlock, idx: number ) {
-            let questionnaireBlockRenderer = new QuestionnaireBlockRenderer( questionnaireBlock, this.questionnaireSourcePath, this.questionnaireRepoName );
+        this.parsedQuestions.forEach( ( question: Question, idx: number ) => {
+            const questionRenderer = new QuestionRenderer( question, this.questionnaireSourcePath, this.questionnaireRepoName )
 
-            renderedBlockQuestion.push( questionnaireBlockRenderer.render() );
+            renderedQuestion.push( questionRenderer.render() )
         }, this);
 
-        return renderedBlockQuestion.join(" ");
+        return renderedQuestion.join(" ")
     }
 }

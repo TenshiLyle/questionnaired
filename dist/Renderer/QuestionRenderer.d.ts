@@ -1,10 +1,10 @@
-import QuestionnaireBlock from '../Parser/QuestionnaireBlock';
-export default class QuestionnaireBlockRenderer {
-    private questionnaireBlock;
+import Question from '../Parser/Question';
+export default class QuestionRenderer {
+    private question;
     private sourcePath;
     private repoName;
     private cheerio;
-    constructor(questionnaireBlock: QuestionnaireBlock, sourcePath: string, repoName: string);
+    constructor(question: Question, sourcePath: string, repoName: string);
     render(): string;
     private appendElement(element);
     private appendQuestionnaireElement(element);

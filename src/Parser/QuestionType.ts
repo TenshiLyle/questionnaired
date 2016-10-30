@@ -1,4 +1,4 @@
-export const QuestionnaireType = {
+export const QuestionType = {
     "CR": "CR",
     "MC": "MC",
     "MS": "MS",
