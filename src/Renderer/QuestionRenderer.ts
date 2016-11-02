@@ -86,7 +86,7 @@ export default class QuestionRenderer {
     private renderSubmit(): string {
         return `<button type='button' class='btn btn-primary submit-user-answer' data-question-type='${this.question.type}'
                     data-question-number='${this.question.questionNumber}' data-questionnaire-source='${this.sourcePath}'
-                    data-validating-text='<i class="icon-spinner icon-spin icon-large"></i> Verifying...' data-questionnaire-repo='${this.repoName}'>Submit</button>`
+                    data-validating-text='<i class="fa fa-refresh fa-spin fa-fw"></i> Verifying...' data-questionnaire-repo='${this.repoName}'>Submit</button>`
     }
 
     private renderCR(): string {
