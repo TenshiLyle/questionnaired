@@ -11,6 +11,7 @@ describe("Question Parser parses a question file parser, it requires a .q.md fil
 
     const questionnaireParser: QuestionnaireParser = new QuestionnaireParser('/tmp/test-question.q.md');
     const result = questionnaireParser.parse();
+    console.log(result)
 
     it("Parse method should give us an array of Question", function() {
         expect( result instanceof Array ).toBe(true);
@@ -38,23 +39,24 @@ describe("Question Parser parses a question file parser, it requires a .q.md fil
 });
 
 function makeQuestion() {
-    let questionText = `1. What is my name?
+    let questionText = `
+1. What is my name?
 
- a. Sandae
+a. Sandae
 
- b. Jerome
+b. Jerome
 
- c. Mark
+c. Mark
 
- d. Nino
+d. Nino
 
 2. This is a multiple-selection type of question
 
- a. W
+a. W
 
- b. C
+b. C
 
- c. D
+c. D
 
 3. This question can submit code:
 

@@ -51,7 +51,7 @@ export default class Question {
         let hasText = false
         
         this.text.forEach( (tok: any) => {
-            if ( tok.hasOwnProperty('text' && tok.text.length > 0 )) hasText = true
+            if ( tok.hasOwnProperty('text') && tok.text.length > 0 ) hasText = true
         })
 
         return hasText

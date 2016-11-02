@@ -62,7 +62,7 @@ class QuestionRenderer {
     renderSubmit() {
         return `<button type='button' class='btn btn-primary submit-user-answer' data-question-type='${this.question.type}'
                     data-question-number='${this.question.questionNumber}' data-questionnaire-source='${this.sourcePath}'
-                    data-questionnaire-repo='${this.repoName}'>Submit</button>`;
+                    data-validating-text='<i class="icon-spinner icon-spin icon-large"></i> Verifying...' data-questionnaire-repo='${this.repoName}'>Submit</button>`;
     }
     renderCR() {
         const code = escapeHTML(this.question.code);

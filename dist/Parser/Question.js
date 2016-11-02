@@ -33,45 +33,41 @@ class Question {
         return false;
     }
     hasText() {
-        if (this.text.length > 0) {
-            return true;
-        }
-        return false;
+        let hasText = false;
+        this.text.forEach((tok) => {
+            if (tok.hasOwnProperty('text') && tok.text.length > 0)
+                hasText = true;
+        });
+        return hasText;
     }
     hasQuestionNumber() {
-        if (this.questionNumber === undefined) {
+        if (this.questionNumber === undefined)
             return false;
-        }
         return true;
     }
     hasType() {
-        if (this.type === undefined) {
+        if (this.type === undefined)
             return false;
-        }
         return true;
     }
     hasAnswer() {
-        if (this.answer === undefined) {
+        if (this.answer === undefined)
             return false;
-        }
         return true;
     }
     hasChoices() {
-        if (this.choices === undefined) {
+        if (this.choices === undefined)
             return false;
-        }
         return true;
     }
     hasLanguage() {
-        if (this.language === undefined) {
+        if (this.language === undefined)
             return false;
-        }
         return true;
     }
     hasCode() {
-        if (this.code === undefined) {
+        if (this.code === undefined)
             return false;
-        }
         return true;
     }
     isCR() {

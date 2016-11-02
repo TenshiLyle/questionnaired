@@ -19,7 +19,7 @@ describe("A Question represent a single question from the questionnaire file", f
 function createCRQuestion(): Question {
     const question = new Question()
 
-    question.text.push(createQuestionText())
+    question.text = createQuestionText()
     question.questionNumber = 2
     question.type = QuestionType.CR
     question.language = 'php'
@@ -32,7 +32,7 @@ function createCRQuestion(): Question {
 function createNonCRQuestion(): Question {
     const question = new Question()
 
-    question.text.push(createQuestionText())
+    question.text = createQuestionText()
     question.questionNumber = 1
     question.type = QuestionType.MC
     question.choices = {
