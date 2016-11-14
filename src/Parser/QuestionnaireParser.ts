@@ -9,8 +9,6 @@ import QuestionToken from './QuestionToken'
 import Answer from './Answer'
 import { QuestionType } from './QuestionType'
 
-const markdown = require('markdown-it');
-
 export interface QuestionTokenList {
     [ index: number ]: QuestionToken
 }

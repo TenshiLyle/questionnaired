@@ -8,7 +8,6 @@ const Question_1 = require('./Question');
 const QuestionToken_1 = require('./QuestionToken');
 const Answer_1 = require('./Answer');
 const QuestionType_1 = require('./QuestionType');
-const markdown = require('markdown-it');
 class QuestionnaireParser {
     constructor(questionFilePath) {
         this.questionFilePath = questionFilePath;
